@@ -40,20 +40,56 @@ DTLR proposes a **"Perception-before-Cognition"** architecture that decouples en
 
 ---
 
-## 📦 Datasets
+## 📦 BGTD: Byte-Grounded Traffic Description Benchmark
 
-Evaluated on **6 benchmark datasets** covering VPN, Tor, TLS, malware, and cross-platform traffic:
+### Overview
 
-| Dataset | Traffic Type | Download |
-|---|---|---|
-| ISCXVPN2016 | VPN encrypted traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
-| ISCX-Tor-2016 | Tor anonymous traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
-| CSTNET-TLS1.3 | TLS 1.3 encrypted traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
-| USTC-TFC-2016 | Malicious & normal traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
-| CrossPlatform (Android) | Cross-platform app traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
-| CrossPlatform (iOS) | Cross-platform app traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+Existing public traffic datasets provide only raw packet captures paired with coarse-grained categorical labels. While invaluable for discriminative tasks, they fundamentally **lack fine-grained semantic annotations** — such as discriminative behavioral traits, verifiable forensic evidence chains, and expert-level natural language descriptions — that are essential for training and evaluating generative reasoning models.
 
-> 📥 All datasets will be provided via **BaiduNetdisk / Google Drive**
+To bridge this gap, this paper proposes the **Byte-Grounded Traffic Description (BGTD)** benchmark — to the best of our knowledge, **the first benchmark to explicitly pair raw network traffic bytes with structured expert knowledge**. BGTD provides the key foundational data required for multimodal reasoning towards explainable encrypted traffic interpretation.
+
+### Dataset Construction Pipeline
+
+<div align="center">
+  <img src="Dataset_generate.png" alt="BGTD Dataset Construction Pipeline" width="100%"/>
+  <p><em>Figure 2: Pipeline of developing BGTD dataset: (a) session extraction and class balancing from raw PCAP files, (b) fixed-length 10×160 NPY array generation via priority-based packet sampling, and (c) LLM-assisted ground-truth synthesis using Claude Opus prompted as a senior network security expert.</em></p>
+</div>
+
+**Key design choices:**
+- **Temporal Keyframe Preservation**: First 2 and last 2 packets are always retained to capture protocol handshakes and session-end states.
+- **Payload-Priority Sampling**: Middle packets are ranked by L4 payload length to prioritize information-rich content.
+- **Fixed Representation**: Each flow is normalized to a `10×160` tensor (64-byte header + 96-byte payload per packet), with IP addresses masked and ports bucketed for privacy and generalization.
+
+### Automated Expert-Knowledge Generation
+
+BGTD uses an automated pipeline to generate rich semantic annotations, powered by **Claude Opus**:
+
+1. **Global & Local Feature Extraction**: Per-flow statistics (duration, throughput, dominant protocols) and byte-level attributes (Shannon entropy, ASCII ratio, TLS/HTTP pattern matching) are extracted and discretized into low/mid/high levels.
+2. **Expert Knowledge Base Construction**: For each traffic category, an LLM generates protocol hints, behavioral characteristics, and security context.
+3. **Multi-field Semantic Label Generation**: Each sample is annotated with 5 structured fields:
+
+| Field | Description |
+|---|---|
+| `class` | Ground-truth traffic category label |
+| `traits` | 5 deterministic byte-level attributes (TLS presence, HTTP tokens, ASCII ratio, entropy, zero-padding) |
+| `evidence` | 2–4 verifiable natural language statements grounded in raw byte observations |
+| `description` | 2–3 sentence behavioral summary integrating byte observations with expert knowledge |
+| `notes` | 1 security-relevant sentence on risk, monitoring strategy, or anomaly indicators |
+
+### Dataset Statistics
+
+BGTD integrates **6 authoritative public traffic repositories**, covering diverse network behaviors, application ecosystems, and encryption protocols:
+
+| Dataset | Traffic Type | Classes | Samples | Download |
+|---|---|---|---|---|
+| ISCXVPN2016 | VPN encrypted traffic | 7 | 42,000 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| ISCX-Tor-2016 | Tor anonymous traffic | 8 | 80,000 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CSTNET-TLS1.3 | TLS 1.3 encrypted web traffic | 120 | 46,372 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| USTC-TFC-2016 | Benign & malware traffic | 12 | 66,388 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CrossPlatform (Android) | Cross-platform mobile app traffic | 212 | 38,673 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CrossPlatform (iOS) | Cross-platform mobile app traffic | 196 | 36,535 | [📥 BaiduNetdisk (code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+
+> All datasets are split into training and test sets at an **8:2 ratio**.
 
 ---
 
@@ -148,6 +184,7 @@ DTLR/
 ├── scripts/
 │   └── zero2.json          # DeepSpeed ZeRO-2 config
 ├── llavav_model.png        # Architecture figure
+├── Dataset_generate.png    # BGTD dataset pipeline figure
 ├── requirements.txt
 └── README.md
 ```
@@ -161,7 +198,7 @@ If you find this work useful for your research, please consider citing:
 ```bibtex
 @article{dtlr2025,
   title   = {Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark},
-  author  = {},
+  author  = {Longgang Zhang, Xiaowei Fu, Fuxiang Huang, and Lei Zhang},
   journal = {},
   year    = {2025}
 }
