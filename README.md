@@ -1,37 +1,63 @@
-# DTLR: Deep Traffic Language Reasoning
+<div align="center">
 
-A multimodal framework for encrypted network traffic classification and forensic report generation, combining a frozen **NetMamba** encoder with a **Qwen3-1.7B** LLM under a **"Perception-before-Cognition"** architecture.
+# 🔐 DTLR
 
-> This repository contains the official code for the paper: *[Paper Title]* (coming soon)
+**Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark**
+
+[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![DeepSpeed](https://img.shields.io/badge/DeepSpeed-ZeRO--2-green?logo=microsoft)](https://www.deepspeed.ai/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-lightgrey?logo=arxiv)](.)
+
+<br/>
+
+> 📄 Official implementation of the paper: ***Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark*** (coming soon)
+
+</div>
 
 ---
 
-## Overview
+## 📖 Overview
 
-DTLR decouples traffic understanding into two stages:
-1. **Perception**: A frozen NetMamba encoder extracts deep representations from raw traffic byte sequences (stored as `.npy` files).
-2. **Cognition**: A Qwen3-1.7B LLM with LoRA fine-tuning performs traffic classification and generates structured forensic reports.
+DTLR proposes a **"Perception-before-Cognition"** architecture that decouples encrypted traffic understanding into two sequential stages:
 
----
+- **Perception**: A frozen NetMamba encoder extracts deep representations from raw traffic byte sequences.
+- **Cognition**: A Qwen3-1.7B LLM with LoRA fine-tuning performs traffic classification and generates structured forensic reports including behavioral traits, evidence chains, and risk assessments.
 
-## Datasets
+<div align="center">
+  <img src="llavav_model.png" alt="DTLR Architecture" width="100%"/>
+  <p><em>Figure 1: Overall architecture of the DTLR framework.</em></p>
+</div>
 
-This project is evaluated on six benchmark datasets:
-
-| Dataset | Domain |
+| Component | Details |
 |---|---|
-| ISCXVPN2016 | VPN traffic classification |
-| ISCX-Tor-2016 | Tor anonymous traffic |
-| CSTNET-TLS1.3 | TLS 1.3 encrypted traffic |
-| USTC-TFC-2016 | Malicious & normal traffic |
-| CrossPlatform (Android) | Cross-platform app traffic |
-| CrossPlatform (iOS) | Cross-platform app traffic |
-
-> Dataset download: [Coming soon — will be provided via BaiduNetdisk / Google Drive]
+| 🧠 LLM Backbone | Qwen3-1.7B |
+| 👁️ Traffic Encoder | NetMamba (frozen) |
+| 🔗 Connector | MLP 2× GeLU |
+| 🎛️ Fine-tuning | LoRA (r=16, α=16) |
+| ⚡ Training Strategy | DeepSpeed ZeRO-2, 4× GPU |
 
 ---
 
-## Environment
+## 📦 Datasets
+
+Evaluated on **6 benchmark datasets** covering VPN, Tor, TLS, malware, and cross-platform traffic:
+
+| Dataset | Traffic Type | Download |
+|---|---|---|
+| ISCXVPN2016 | VPN encrypted traffic | [🔗 Coming soon](#) |
+| ISCX-Tor-2016 | Tor anonymous traffic | [🔗 Coming soon](#) |
+| CSTNET-TLS1.3 | TLS 1.3 encrypted traffic | [🔗 Coming soon](#) |
+| USTC-TFC-2016 | Malicious & normal traffic | [🔗 Coming soon](#) |
+| CrossPlatform (Android) | Cross-platform app traffic | [🔗 Coming soon](#) |
+| CrossPlatform (iOS) | Cross-platform app traffic | [🔗 Coming soon](#) |
+
+> 📥 All datasets will be provided via **BaiduNetdisk / Google Drive**
+
+---
+
+## 🛠️ Environment Setup
 
 ```bash
 conda create -n dtlr python=3.10
@@ -39,11 +65,11 @@ conda activate dtlr
 pip install -r requirements.txt
 ```
 
-> **Note**: Requires CUDA-capable GPU(s). Training uses 4 GPUs with DeepSpeed ZeRO-2. Inference uses 2 GPUs.
+> ⚠️ **Requirements**: CUDA-capable GPU(s). Training uses **4× GPU** with DeepSpeed ZeRO-2. Inference uses **2× GPU**.
 
 ---
 
-## Training
+## 🚀 Training
 
 ```bash
 NCCL_P2P_DISABLE=1 NCCL_IB_DISABLE=1 \
@@ -85,7 +111,7 @@ deepspeed --num_gpus 4 \
 
 ---
 
-## Inference
+## 🔍 Inference
 
 ```bash
 python DTLR_model/tinyllava/eval/eval_cls_head_qwen_sample_no_LLMclass_mGPU.py \
@@ -102,27 +128,53 @@ python DTLR_model/tinyllava/eval/eval_cls_head_qwen_sample_no_LLMclass_mGPU.py \
 
 ---
 
-## Results
+## 📊 Results
 
-Experimental results are reported in the paper. *(Coming soon)*
+Experimental results across all six datasets are reported in the paper.
+
+> 📄 *(Coming soon)*
 
 ---
 
-## Citation
+## 📁 Repository Structure
 
-If you find this work useful, please cite:
+```
+DTLR/
+├── DTLR_model/
+│   └── tinyllava/
+│       ├── train/          # Training scripts
+│       ├── eval/           # Evaluation scripts
+│       └── utils/          # Utility functions
+├── scripts/
+│   └── zero2.json          # DeepSpeed ZeRO-2 config
+├── llavav_model.png        # Architecture figure
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## 📜 Citation
+
+If you find this work useful for your research, please consider citing:
 
 ```bibtex
 @article{dtlr2025,
-  title={},
-  author={},
-  journal={},
-  year={2025}
+  title   = {Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark},
+  author  = {},
+  journal = {},
+  year    = {2025}
 }
 ```
 
 ---
 
-## License
+## 📄 License
 
 This project is released under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+⭐ If this work helps your research, please consider giving it a star!
+</div>
