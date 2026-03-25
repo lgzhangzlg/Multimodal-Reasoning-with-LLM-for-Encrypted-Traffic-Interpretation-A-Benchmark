@@ -1,0 +1,1406 @@
+{
+  "structured": {
+    "n_total": 160,
+    "n_structured": 160,
+    "structured_rate": 1.0,
+    "classification": {
+      "accuracy": 0.99375,
+      "precision": 0.994047619047619,
+      "recall": 0.99375,
+      "f1": 0.9937460913070669,
+      "classes": [
+        "AUDIO",
+        "BROWSING",
+        "CHAT",
+        "FILE-TRANSFER",
+        "MAIL",
+        "P2P",
+        "VIDEO",
+        "VOIP"
+      ]
+    },
+    "traits": {
+      "binary": {
+        "has_http_method": {
+          "acc": 0.9307692307692308,
+          "n": 130
+        },
+        "has_tls_record": {
+          "acc": 0.5692307692307692,
+          "n": 130
+        }
+      },
+      "bucket": {
+        "ascii_ratio_bucket": {
+          "exact_acc": 0.3235294117647059,
+          "direction_acc": 0.7549019607843137,
+          "n": 102
+        },
+        "entropy_bucket": {
+          "exact_acc": 0.4411764705882353,
+          "direction_acc": 0.8137254901960784,
+          "n": 102
+        },
+        "zero_pad_ratio_bucket": {
+          "exact_acc": 0.4117647058823529,
+          "direction_acc": 0.9607843137254902,
+          "n": 102
+        }
+      }
+    },
+    "evidence_completeness": 0.6854166666666666
+  },
+  "judge": {
+    "aggregate": {
+      "n_judged": 160,
+      "n_failed": 0,
+      "faithfulness": {
+        "mean": 1.70625,
+        "std": 0.6383266698955951
+      },
+      "byte_grounding": {
+        "mean": 1.6625,
+        "std": 0.5797359312652615
+      },
+      "completeness": {
+        "mean": 1.7125,
+        "std": 0.6362733296312207
+      },
+      "overall_mean": 1.69375,
+      "overall_std": 0.5361538375317293
+    },
+    "per_class": {
+      "AUDIO": {
+        "faithfulness": 1.45,
+        "byte_grounding": 1.5,
+        "completeness": 1.55,
+        "n": 20
+      },
+      "BROWSING": {
+        "faithfulness": 1.9,
+        "byte_grounding": 1.7,
+        "completeness": 1.7,
+        "n": 20
+      },
+      "CHAT": {
+        "faithfulness": 1.8,
+        "byte_grounding": 1.55,
+        "completeness": 1.65,
+        "n": 20
+      },
+      "FILE-TRANSFER": {
+        "faithfulness": 1.6,
+        "byte_grounding": 1.55,
+        "completeness": 1.75,
+        "n": 20
+      },
+      "MAIL": {
+        "faithfulness": 1.75,
+        "byte_grounding": 1.8,
+        "completeness": 1.8,
+        "n": 20
+      },
+      "P2P": {
+        "faithfulness": 1.65,
+        "byte_grounding": 1.8,
+        "completeness": 1.75,
+        "n": 20
+      },
+      "VIDEO": {
+        "faithfulness": 1.75,
+        "byte_grounding": 1.7,
+        "completeness": 1.75,
+        "n": 20
+      },
+      "VOIP": {
+        "faithfulness": 1.75,
+        "byte_grounding": 1.7,
+        "completeness": 1.75,
+        "n": 20
+      }
+    },
+    "per_sample": [
+      {
+        "sample_id": 0,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 3,
+        "completeness": 2,
+        "rationale": "The description incorrectly attributes the traffic to Tor anonymization rather than MAIL, misidentifies the zero_pad_ratio bucket (low vs. mid), and omits the key discriminative MAIL traits like periodic sync intervals and bursty transfer patterns; byte-level TLS evidence is present but not tied to MAIL-specific behavior."
+      },
+      {
+        "sample_id": 1,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate support for the AUDIO class."
+      },
+      {
+        "sample_id": 2,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence contradicts the ground truth on nearly every key trait (high vs low entropy, low vs high zero-padding, mid vs high ASCII ratio) and the description incorrectly characterizes the traffic as Tor-like with encrypted/compressed content, while the actual CHAT traffic shows low-entropy plaintext with high zero-padding indicating a short flow."
+      },
+      {
+        "sample_id": 3,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The evidence chain is largely generic or misattributed (referencing FILE-TRANSFER, Tor MAIL, VIDEO, etc. rather than P2P-specific traits), and key discriminative ground-truth signals like high entropy and low zero-padding ratio are absent or contradicted (predicted low entropy vs. ground-truth high entropy)."
+      },
+      {
+        "sample_id": 4,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no traits, evidence, or description whatsoever, making it impossible to evaluate faithfulness, grounding, or completeness."
+      },
+      {
+        "sample_id": 5,
+        "class": "CHAT",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TLS presence and mid zero-padding but misidentifies entropy as low instead of high, uses vague qualitative statements without specific byte measurements, and omits key discriminative CHAT traits like symmetric/continuous flow pattern, irregular human-driven timing, and lower average throughput compared to other classes."
+      },
+      {
+        "sample_id": 6,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts ground truth on key traits (claims TLS record present and high ASCII ratio when ground truth shows neither), and the description incorrectly characterizes the traffic as video streaming/conferencing rather than mail, with no mention of MAIL-specific bursty periodic sync behavior."
+      },
+      {
+        "sample_id": 7,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report incorrectly asserts TLS record header presence (ground truth: false), references Tor anonymization without grounding in audio-specific traits, misreports zero-padding as low vs. ground-truth mid, and omits key discriminative traits like sustained moderate throughput and TCP dominance that distinguish Tor AUDIO from similar classes."
+      },
+      {
+        "sample_id": 8,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence and description describe SMTP/Tor MAIL rather than P2P, ignoring all discriminative P2P traits like upload/download symmetry, sustained high throughput, high ASCII ratio, low entropy, and high zero-padding ratio, with nonsensical values like '102.3% of bytes'."
+      },
+      {
+        "sample_id": 9,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence and description are entirely placeholder template text with no actual values filled in, providing zero specific or class-relevant information about CHAT traffic."
+      },
+      {
+        "sample_id": 10,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report misidentifies ASCII ratio as 'mid' (ground truth is 'high'), incorrectly claims HTTP method presence, reports an impossible '102.3% of bytes' for TCP, and omits the key discriminative traits of periodic sync intervals and bursty transfers; evidence is vague and partially contradicts the MAIL class."
+      },
+      {
+        "sample_id": 11,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report misidentifies the class as VIDEO while predicting FILE-TRANSFER, contains contradictory descriptions, lacks any byte-level grounding (no entropy, zero-padding, or ASCII ratio observations), and misses key discriminative traits like high zero-padding ratio, short flow characteristics, and unidirectional single-server transfer patterns from the ground truth."
+      },
+      {
+        "sample_id": 12,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts ground truth on key traits (falsely claims TLS record present, misses high zero-pad ratio), the description introduces irrelevant Tor/FTP/STUN details not supported by the traits, and critical VOIP discriminators like bidirectional low-bandwidth codec-driven timing and TCP dominance are absent."
+      },
+      {
+        "sample_id": 13,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted traits contradict ground truth (high ASCII/low entropy vs. mid ASCII/high entropy), the evidence claims plaintext structured data when the traffic is actually encrypted/high-entropy, and key discriminative traits like sustained unidirectional high-throughput download are entirely absent."
+      },
+      {
+        "sample_id": 14,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report correctly identifies the TLS record header but contradicts ground-truth on entropy (claims low instead of high) and ASCII ratio (claims high instead of mid), misses the low zero-padding indicator of bulk transfer, and the description contains fabricated details about 'chat sessions' and 'dynamic peer IPs' unsupported by the evidence."
+      },
+      {
+        "sample_id": 15,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted traits and evidence are nearly opposite to ground truth on every dimension: the model claims high ASCII ratio, low entropy, no TLS, and TCP-only when the ground truth shows low ASCII ratio, high entropy, TLS records present, and TLS-dominant traffic, making the evidence contradictory and non-discriminative for VOIP."
+      },
+      {
+        "sample_id": 16,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly asserts TLS record presence and high ASCII ratio, contradicting the ground truth of no TLS record, high entropy, and mid ASCII ratio, while missing key discriminative traits like bursty transfer patterns and periodic sync intervals characteristic of MAIL traffic."
+      },
+      {
+        "sample_id": 17,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 3,
+        "completeness": 3,
+        "rationale": "The evidence partially supports encrypted P2P traffic but introduces irrelevant Tor/SRTP references that contradict the P2P class, misreports the zero-pad ratio bucket (mid vs. ground-truth low), and omits the key discriminative trait of low zero-padding indicating sustained bulk transfer activity."
+      },
+      {
+        "sample_id": 18,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report incorrectly asserts a TLS record header (has_tls_record=true vs ground-truth false), misses the Tor-browsing-specific asymmetric traffic pattern and relay-IP distinguishing traits, and relies on vague qualitative statements rather than concrete byte-level measurements."
+      },
+      {
+        "sample_id": 19,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence is largely generic or contradictory (mentioning HTTP request timing for a non-HTTP chat flow) and fails to capture key discriminative traits like high ASCII ratio, low entropy, high zero-padding ratio, or chat-specific symmetric/low-throughput timing patterns."
+      },
+      {
+        "sample_id": 20,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly identifies high entropy and low zero-padding while ground truth shows mid entropy, high ASCII ratio, and mid zero-padding; the description introduces irrelevant Tor onion routing and HTTPS claims unsupported by the traits, missing the key VIDEO discriminators of sustained unidirectional high-throughput download and plaintext ASCII content."
+      },
+      {
+        "sample_id": 21,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report misidentifies the class as AUDIO/streaming rather than VOIP, uses incorrect trait values (high ASCII ratio, mid zero-pad vs ground-truth low ASCII and high zero-pad), and provides vague, generic descriptions without concrete byte-level evidence; it also misses the key VOIP discriminators like codec-driven regular intervals and bidirectional low-bandwidth flow."
+      },
+      {
+        "sample_id": 22,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report incorrectly states no TLS record and 100% raw TCP rather than TLS, contradicts the ground truth's high entropy and low zero-padding (claiming high zero-padding), and provides no concrete byte-level evidence such as content-type bytes or Shannon entropy measurements."
+      },
+      {
+        "sample_id": 23,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate any support for the AUDIO class."
+      },
+      {
+        "sample_id": 24,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly identifies TLS records (ground truth: false), misclassifies ascii_ratio as 'mid' instead of 'high', references Tor browsing and FTP/Skype instead of VOIP-specific traits like codec-driven packet intervals and bidirectional low-bandwidth flow, and lacks any mention of the key discriminative features distinguishing VOIP from other Tor traffic classes."
+      },
+      {
+        "sample_id": 25,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The description incorrectly invokes HTTP, FTP, P2P, and video download activity irrelevant to CHAT, misreports TLS presence (ground truth is false), ignores the high zero-padding ratio indicating a short flow, and omits key CHAT discriminators like symmetric/continuous traffic patterns and low throughput."
+      },
+      {
+        "sample_id": 26,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The evidence and description describe Tor BROWSING, not FILE-TRANSFER, with the distinguishing characteristics section explicitly comparing 'Tor BROWSING' traits; the report fails to ground claims in byte-level observations specific to file transfer and misses key discriminative traits like sustained unidirectional throughput and low zero-padding ratio."
+      },
+      {
+        "sample_id": 27,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-level grounding, or coverage of discriminative traits."
+      },
+      {
+        "sample_id": 28,
+        "class": "AUDIO",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TCP dominance and high zero-padding but misclassifies entropy as 'mid' instead of 'low', and the distinguishing characteristics mention generic timing differences rather than the ground-truth's key discriminators like CDN IP absence and sustained moderate throughput vs. bursty browsing."
+      },
+      {
+        "sample_id": 29,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-level grounding, or coverage of discriminative traits."
+      },
+      {
+        "sample_id": 30,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly asserts TLS record presence (ground truth: false), misses the critical high zero-padding ratio indicating a short flow, and omits the key discriminative traits of CHAT (irregular human-driven timing, symmetric/continuous pattern, low throughput) while relying on vague or contradictory claims."
+      },
+      {
+        "sample_id": 31,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The report contains no predicted traits, evidence, or description whatsoever, making it impossible to assess faithfulness, byte-grounding, or completeness."
+      },
+      {
+        "sample_id": 32,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report falsely claims a TLS record header (has_tls_record=true) contradicting ground truth, introduces irrelevant DNS/SIP/Tor speculation unsupported by the traits, and misses the key discriminative audio trait of sustained moderate throughput versus bursty browsing or strict-timing VoIP."
+      },
+      {
+        "sample_id": 33,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence claims high Shannon entropy but ground truth shows low entropy and high zero-padding (short flow), the distinguishing characteristics cited are wrong for VOIP, and key discriminative traits like regular codec-driven timing, bidirectional low-bandwidth, and high zero-pad ratio are entirely missing."
+      },
+      {
+        "sample_id": 34,
+        "class": "BROWSING",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-grounding, or completeness against the ground truth."
+      },
+      {
+        "sample_id": 35,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The description contradicts the predicted class (repeatedly references 'Tor AUDIO' instead of CHAT), invents fabricated metrics like '102.3% of bytes' and 'HTTPS 48.7%', misidentifies TLS presence, and fails to mention the key discriminative CHAT traits like symmetric/continuous flow and human-conversation-driven timing, while the zero-pad ratio bucket is also wrong."
+      },
+      {
+        "sample_id": 36,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, providing nothing to evaluate against the ground-truth VOIP behavioral profile."
+      },
+      {
+        "sample_id": 37,
+        "class": "MAIL",
+        "faithfulness": 4,
+        "byte_grounding": 2,
+        "completeness": 4,
+        "rationale": "The report correctly identifies TCP dominance, mail protocol characteristics, and behavioral distinctions from similar classes, but misstates ascii_ratio_bucket as 'high' instead of 'mid' and lacks specific byte-level measurements beyond qualitative entropy descriptions."
+      },
+      {
+        "sample_id": 38,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes SMTP email protocol characteristics entirely irrelevant to FILE-TRANSFER, misidentifies the traffic class as SMTP mail, ignores key discriminative traits like zero-padding ratio, entropy, and ASCII ratio, and provides no byte-level grounding specific to file transfer behavior."
+      },
+      {
+        "sample_id": 39,
+        "class": "BROWSING",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TCP dominance and low entropy but misreports ASCII ratio as 'high' when ground truth is 'low', and relies on vague qualitative claims rather than specific byte-level measurements, while partially covering discriminative traits like asymmetric throughput and burstiness."
+      },
+      {
+        "sample_id": 40,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The evidence chain confuses FILE-TRANSFER with Tor BROWSING, includes nonsensical values (102.3% of bytes), misattributes entropy bucket (claims 'low' vs ground-truth 'mid'), omits the key discriminative traits of sustained unidirectional throughput and low zero-padding, and generic TCP dominance is the only partially relevant observation."
+      },
+      {
+        "sample_id": 41,
+        "class": "BROWSING",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TCP dominance but introduces fabricated metrics (104.3% bytes, sub-1Gbps thresholds), misses key discriminative traits like IP anonymization, asymmetric download/upload patterns, and burstiness compared to Tor AUDIO/VOIP, relying mostly on vague qualitative comparisons rather than concrete byte-level observations."
+      },
+      {
+        "sample_id": 42,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte grounding, or completeness."
+      },
+      {
+        "sample_id": 43,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence and description contradict the ground truth on nearly every trait (TLS present vs. absent, high ASCII vs. low, web browsing framing vs. P2P), and the report fails to capture any of the discriminative P2P traits such as high zero-padding ratio, bidirectional symmetry, or sustained throughput."
+      },
+      {
+        "sample_id": 44,
+        "class": "CHAT",
+        "faithfulness": 3,
+        "byte_grounding": 3,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TLS and TCP dominance but misreports ASCII ratio as high (ground truth: mid) and entropy as mid (ground truth: high), missing the key discriminative high-entropy encrypted payload trait and misattributing protocol as TCP rather than TLS."
+      },
+      {
+        "sample_id": 45,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted report incorrectly identifies a TLS record header (contradicting ground truth of no TLS record), misframes the traffic as file transfer rather than audio streaming, omits the distinctive low ASCII ratio and mid zero-pad ratio, and lacks the key discriminative trait about sustained moderate throughput characteristic of Tor audio streaming."
+      },
+      {
+        "sample_id": 46,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence incorrectly asserts TLS record presence and HTTP protocol (both absent in ground truth), misidentifies ASCII ratio as high instead of mid, ignores the defining high zero-padding ratio indicating a short flow, and the description introduces irrelevant Tor onion routing claims that contradict the actual MAIL traffic behavioral profile."
+      },
+      {
+        "sample_id": 47,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts the ground truth on key traits (claims TLS record present and high ASCII ratio, while ground truth shows no TLS record, mid ASCII ratio, and high entropy), and misses the most discriminative Tor-browsing characteristics like high Shannon entropy, asymmetric traffic patterns, and Tor relay IP behavior."
+      },
+      {
+        "sample_id": 48,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence and description repeatedly reference Tor CHAT characteristics rather than FILE-TRANSFER traits, contradicting the predicted class, and miss key discriminative features like high entropy and bulk sustained transfer indicators present in the ground truth."
+      },
+      {
+        "sample_id": 49,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The description body is copy-pasted from an AUDIO category template and contradicts the MAIL prediction; predicted traits mismatch ground truth on TLS presence, entropy, and ASCII ratio; key discriminative MAIL traits (bursty Tor mail sync intervals, high entropy encrypted payload, no TLS record header) are entirely absent."
+      },
+      {
+        "sample_id": 50,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte grounding, or completeness."
+      },
+      {
+        "sample_id": 51,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report conflates FILE-TRANSFER with Tor BROWSING in its description and distinguishing characteristics, incorrectly citing browsing-specific traits (bursty/asymmetric patterns, URL hiding) rather than file-transfer discriminators (sustained unidirectional throughput, single server connections), and the '108.7% of bytes' figure is nonsensical; while TCP dominance and low zero-padding are correctly noted, the ASCII ratio bucket is wrong (high vs. ground-truth mid) and byte-level grounding is largely absent."
+      },
+      {
+        "sample_id": 52,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence misses the key TLS record detection (a primary discriminator), incorrectly states TCP-only dominance instead of TLS, inverts the throughput characteristic (claims highest rather than lowest), and provides no concrete byte-level observations like content-type bytes or version fields."
+      },
+      {
+        "sample_id": 53,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report misidentifies the class as CHAT rather than AUDIO in its description, uses wrong entropy bucket (high vs ground-truth mid), wrong zero-pad bucket (mid vs low), and the distinguishing characteristics describe CHAT traffic patterns rather than AUDIO streaming traits like sustained moderate throughput and CDN-less routing through Tor relays."
+      },
+      {
+        "sample_id": 54,
+        "class": "VOIP",
+        "faithfulness": 3,
+        "byte_grounding": 3,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TLS record headers with specific byte values but mischaracterizes key traits (predicting low entropy and high ASCII ratio vs. ground-truth high entropy and mid ASCII ratio), and omits the discriminative low zero-padding ratio and dominant TLS protocol proportion that distinguish this VOIP traffic."
+      },
+      {
+        "sample_id": 55,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted report contradicts the ground truth on all key traits—claiming no TLS, high ASCII ratio, and low entropy when the ground truth shows TLS presence, mid ASCII ratio, and high entropy—and the evidence descriptions are largely generic or misattributed, failing to identify the encrypted, TLS-based nature of Tor CHAT traffic."
+      },
+      {
+        "sample_id": 56,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate support for the AUDIO class."
+      },
+      {
+        "sample_id": 57,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report invents FTP-specific claims (STOR/RETR commands, control/data channel entropy) unsupported by the traits, misidentifies the entropy bucket as high instead of mid, omits the key P2P discriminators (upload/download symmetry, sustained throughput vs. Tor browsing/file-transfer), and lacks concrete byte-level grounding like the TLS content-type byte values present in the ground truth."
+      },
+      {
+        "sample_id": 58,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes Tor AUDIO file-transfer behavior with high entropy, contradicting the ground-truth MAIL class which has low entropy and high ASCII ratio indicative of plaintext structured protocols, and no byte-level observations are grounded in concrete measurements."
+      },
+      {
+        "sample_id": 59,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence correctly identifies TCP dominance but misses the key discriminative traits for MAIL (high zero-padding ratio indicating short flow, periodic sync intervals, bursty transfer pattern), relies on generic entropy/ASCII statements, and contains a broken template string ({protocol_name}), making it neither class-specific nor well-grounded."
+      },
+      {
+        "sample_id": 60,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly asserts TLS record headers and high entropy, both contradicted by ground truth (no TLS, low entropy), and misses the key discriminative P2P traits of upload/download symmetry and sustained high throughput while over-emphasizing Tor anonymization specifics not grounded in actual byte observations."
+      },
+      {
+        "sample_id": 61,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly describes high entropy (ground truth is low entropy) and misses the key discriminative traits of high zero-padding ratio indicating a short flow and codec-driven regular packet timing specific to VOIP."
+      },
+      {
+        "sample_id": 62,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence misses the key discriminative trait (high zero-padding ratio indicating a short flow) and the Tor-specific behavioral characteristics, relying instead on generic TCP/entropy statements that could apply to almost any traffic class."
+      },
+      {
+        "sample_id": 63,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes Tor AUDIO/FILE-TRANSFER characteristics rather than P2P, misidentifies entropy and ASCII traits (predicts high entropy/low ASCII vs ground-truth low entropy/high ASCII), fabricates irrelevant Tor application layer comparisons, and fails to mention any of the key P2P discriminative traits like upload/download symmetry or sustained high throughput."
+      },
+      {
+        "sample_id": 64,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence misses the key discriminative traits (high ASCII ratio with low entropy, high zero-padding indicating short flow) and offers only vague, generic statements without concrete byte-level measurements or class-specific behavioral distinctions like symmetric/continuous timing patterns."
+      },
+      {
+        "sample_id": 65,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence contradicts ground-truth on key traits (TLS present vs. absent, high ASCII vs. low, mid zero-pad vs. high), misses the critical short-flow/high-padding discriminator, and relies on vague or incorrect claims rather than concrete byte-level observations matching MAIL behavior."
+      },
+      {
+        "sample_id": 66,
+        "class": "VIDEO",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TCP dominance and directional download characteristics but incorrectly states high ASCII ratio (ground truth is low), undermining faithfulness, and the evidence remains largely qualitative without concrete byte-level measurements."
+      },
+      {
+        "sample_id": 67,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report incorrectly characterizes the traffic as having high ASCII ratio (ground truth is low) and fabricates Tor-specific claims like 'onion routing' and 'exit node' metadata that are not grounded in byte-level observations, while the TCP protocol dominance is correctly noted but other discriminative traits like asymmetric upload/download patterns are missed."
+      },
+      {
+        "sample_id": 68,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence misidentifies the traffic as 'Tor CHAT' and 'peer-to-peer file transfer' rather than AUDIO streaming, uses wrong entropy bucket (high vs mid ground-truth), wrong zero-pad bucket (mid vs low), and the distinguishing characteristics describe CHAT/BROWSING/VOIP comparisons irrelevant to AUDIO; byte-level claims like '2.35 Mbps' and '98.6% TCP' are partially specific but the description contradicts the predicted class by calling it an 'unencrypted chat session,' missing the key AUDIO discriminators of sustained moderate throughput and buffering tolerance."
+      },
+      {
+        "sample_id": 69,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate faithfulness, grounding, or completeness."
+      },
+      {
+        "sample_id": 70,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no traits, evidence, or description whatsoever, making it impossible to assess faithfulness, grounding, or completeness."
+      },
+      {
+        "sample_id": 71,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report contains fabricated metrics (101.3% TCP bytes, impossible value), incorrectly claims TLS record presence contradicting ground truth, and uses vague qualitative statements about 'high-throughput' and 'irregular timing' without concrete byte-level evidence, while missing the key discriminative ASCII ratio observation central to the ground truth."
+      },
+      {
+        "sample_id": 72,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report contradicts itself (claiming 'high' ASCII ratio vs ground-truth 'low', and mismatches on entropy/zero-pad buckets), introduces irrelevant protocol claims (SIP/RTCP, µTorrent, Wi-Fi), and misses the key discriminative P2P traits like bidirectional symmetry, sustained throughput, and bulk transfer indicators."
+      },
+      {
+        "sample_id": 73,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted description contradicts both the class (mentions audio streaming/VLC/DTLS rather than CHAT) and the ground-truth traits (claims TLS present and low zero-padding when ground truth shows no TLS and high zero-padding), missing all key discriminative traits like high zero-padding indicating short flow, low entropy repetitive plaintext, and irregular human-driven timing."
+      },
+      {
+        "sample_id": 74,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence confusingly references Tor BROWSING and AUDIO instead of VOIP, includes wrong distinguishing characteristics, and lacks any concrete byte-level observations like entropy buckets or zero-pad ratios specific to VOIP codec traffic."
+      },
+      {
+        "sample_id": 75,
+        "class": "P2P",
+        "faithfulness": 3,
+        "byte_grounding": 3,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TLS headers and low zero-padding but misclassifies entropy as 'mid' (ground truth: high) and ASCII ratio as 'high' (ground truth: mid), and omits the high Shannon entropy indicator while adding an unsupported claim about plaintext ASCII content."
+      },
+      {
+        "sample_id": 76,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted traits contradict ground truth on key dimensions (TLS record present vs absent, high ASCII vs low, low zero-pad vs mid), and the evidence claims TLS headers and high ASCII ratio that don't match the actual traffic characteristics, missing the discriminative sustained unidirectional high-throughput download pattern that defines VIDEO."
+      },
+      {
+        "sample_id": 77,
+        "class": "BROWSING",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report incorrectly claims TLS record headers and mid entropy when ground truth shows no TLS record and high entropy, missing the key Tor-browsing discriminative traits like asymmetric throughput and relay IP patterns, while ASCII ratio and TCP dominance are correct."
+      },
+      {
+        "sample_id": 78,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence is largely generic (TCP dominance, no HTTP), misses the key discriminative traits of high ASCII ratio, low entropy, and high zero-padding ratio that specifically characterize CHAT traffic, and provides no concrete byte-level measurements."
+      },
+      {
+        "sample_id": 79,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts ground truth (claims TLS record present and high ASCII ratio when ground truth shows no TLS and mid ASCII), the description mentions FTP which is irrelevant to P2P traffic, and key discriminative P2P traits like upload/download symmetry and sustained high throughput are entirely absent."
+      },
+      {
+        "sample_id": 80,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TLS record headers and TCP dominance but describes 'Tor AUDIO' characteristics irrelevant to P2P, misreports entropy as 'low' (ground truth is high) and ASCII ratio as 'high' (ground truth is low), and omits key discriminative traits like low zero-padding ratio and high Shannon entropy indicating encrypted/compressed payload."
+      },
+      {
+        "sample_id": 81,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence contradicts ground-truth traits on TLS presence, entropy level, and zero-pad ratio, and completely misses the key discriminative Tor-browsing characteristics (asymmetric throughput, bursty patterns, Tor relay IPs) that distinguish this class."
+      },
+      {
+        "sample_id": 82,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence incorrectly asserts TLS record headers and high ASCII ratio (contradicting ground-truth low ASCII ratio and no TLS record), introduces irrelevant Tor exit-node framing, and misses all key discriminative traits like TCP dominance, asymmetric burst patterns, and Tor relay IP characteristics that define this browsing class."
+      },
+      {
+        "sample_id": 83,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted report incorrectly asserts a TLS record header (ground truth: false), misclassifies ASCII ratio as high (ground truth: mid), misses the critical high zero-padding ratio indicating a short flow, and substitutes generic TLS/HTTPS descriptions for the actual discriminative FILE-TRANSFER traits like sustained unidirectional throughput."
+      },
+      {
+        "sample_id": 84,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report contains fabricated metrics (4.8 GB/s, 101.9% bytes), mismatches ground-truth entropy bucket (claims 'low' vs actual 'mid'), conflates SFTP/Skype with FILE-TRANSFER, and lacks any concrete byte-level evidence like TLS content-type bytes (0x14–0x17) or version fields that ground truth specifies."
+      },
+      {
+        "sample_id": 85,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 3,
+        "completeness": 2,
+        "rationale": "The report misidentifies key traits (low entropy and high ASCII instead of high entropy and low ASCII), contradicting the ground-truth encrypted payload signature, and omits the discriminative zero-padding ratio evidence while the TLS pattern claim is byte-specific but the entropy/ASCII characterization is inverted."
+      },
+      {
+        "sample_id": 86,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence misidentifies entropy as low (ground truth is high) and zero-padding as mid (ground truth is low), missing the key discriminative traits of high entropy and low zero-padding that distinguish VIDEO from other Tor traffic classes, and the description conflates VIDEO with AUDIO streaming without addressing sustained unidirectional high-throughput download characteristics."
+      },
+      {
+        "sample_id": 87,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report incorrectly asserts a TLS record header (contradicting ground truth), misses the high zero-padding ratio indicating a short flow, omits VOIP-specific bidirectional/codec-driven timing traits, and substitutes generic 'sustained high-throughput' language inconsistent with low-bandwidth VOIP behavior."
+      },
+      {
+        "sample_id": 88,
+        "class": "VIDEO",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TCP dominance and sustained throughput but misses the high Shannon entropy and low zero-padding ratio that are key discriminative traits, and relies on vague qualitative claims rather than specific quantitative measurements."
+      },
+      {
+        "sample_id": 89,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate any support for the AUDIO class."
+      },
+      {
+        "sample_id": 90,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes Tor CHAT behavior rather than P2P, contains no byte-level or quantitative measurements, and misses all key P2P discriminative traits like upload/download symmetry, sustained throughput, high ASCII ratio, low entropy, and zero-pad ratio patterns."
+      },
+      {
+        "sample_id": 91,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The report incorrectly states high entropy and confuses VOIP with AUDIO/VIDEO classes, while ground truth shows low entropy with high ASCII and zero-pad ratios indicating a short plaintext flow; none of the key discriminative traits (low entropy, high ASCII ratio, high zero-padding, codec-driven regular timing) are correctly identified or grounded in specific byte-level observations."
+      },
+      {
+        "sample_id": 92,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The evidence and description are entirely misaligned with the AUDIO class, instead describing Tor chat behavior; the one correct observation (TCP dominance) is generic, and key audio-specific traits like plaintext ASCII content and sustained streaming throughput are absent."
+      },
+      {
+        "sample_id": 93,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 3,
+        "completeness": 3,
+        "rationale": "The description contradicts itself by mentioning Tor onion routing and HTTPS/SSL browsing rather than file transfer characteristics, and misidentifies the ascii_ratio_bucket as high instead of mid, while the evidence partially grounds claims in byte patterns but misses key discriminative traits like unidirectional sustained throughput distinguishing FILE-TRANSFER from BROWSING or P2P."
+      },
+      {
+        "sample_id": 94,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence describes Tor CHAT over UDP with contradictory protocol claims (UDP 98.6% vs TCP 100%), while the predicted class is MAIL; the description is entirely for the wrong traffic class, with no byte-level grounding specific to mail protocols and missing key MAIL discriminative traits like periodic sync intervals and bursty attachment transfers."
+      },
+      {
+        "sample_id": 95,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted traits contradict ground truth on every key dimension (TLS present vs. absent, high entropy vs. mid, low zero-pad vs. mid, mid ASCII vs. high), so the evidence chain supports a wrong feature profile and misses all discriminative traits like sustained moderate throughput, high ASCII ratio, and absence of TLS that actually characterize Tor audio streaming."
+      },
+      {
+        "sample_id": 96,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The description contradicts itself (claiming low entropy yet mentioning Tor tunneling and encrypted content), incorrectly flags TLS record presence, misidentifies ascii_ratio bucket, and confusingly mixes STUN/SIP/Tor claims without grounding in concrete byte-level evidence or the key discriminative trait of asymmetric Tor browsing traffic patterns."
+      },
+      {
+        "sample_id": 97,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report misattributes the traffic to Tor anonymization rather than VOIP-specific behavior, cites incorrect entropy bucket (high vs mid) and ASCII ratio, mentions irrelevant DNS queries and bulk data transfer instead of VOIP's bidirectional low-bandwidth codec-driven characteristics, and provides no VOIP-discriminative evidence like regular inter-packet timing or real-time encoding patterns."
+      },
+      {
+        "sample_id": 98,
+        "class": "CHAT",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report correctly identifies TLS and TCP dominance but gets key metrics wrong (low vs mid entropy/ASCII, misses zero-pad ratio nuances), lacks specific byte values like 0x14~0x17/0x03xx, and omits discriminative CHAT traits like symmetric continuous flow and irregular human-driven timing."
+      },
+      {
+        "sample_id": 99,
+        "class": "AUDIO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The evidence chain conflates AUDIO with CHAT/VOIP distinctions rather than audio-specific traits, the description contradicts itself mentioning plaintext/unprotected content inconsistent with high-entropy audio, and byte-level claims are vague or misattributed (wrong ASCII ratio bucket, incorrect TCP percentage in description vs evidence), though high entropy and TCP dominance are correctly identified."
+      },
+      {
+        "sample_id": 100,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted traits contradict ground truth on every dimension (TLS present vs. absent, high ASCII vs. low, mid entropy vs. low, low zero-pad vs. mid), the evidence incorrectly references Tor browsing rather than VIDEO-specific traits like sustained unidirectional high-throughput download, and key discriminative VIDEO behaviors are entirely absent."
+      },
+      {
+        "sample_id": 101,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 3,
+        "completeness": 2,
+        "rationale": "The predicted description incorrectly characterizes the traffic as chat/IM sessions rather than file transfer, mismatches key traits (high ASCII vs ground-truth mid, mid entropy vs ground-truth high, low zero-pad vs ground-truth mid), and omits the critical discriminative features of sustained unidirectional throughput and single server connections that distinguish FILE-TRANSFER from other categories."
+      },
+      {
+        "sample_id": 102,
+        "class": "CHAT",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted description contradicts the CHAT class entirely (describing file transfer via QUIC/HTTP3 with Tor onion routing), the evidence is generic or fabricated (e.g., 'HTTP request timing,' 'QUIC/TLS 1.3'), and key discriminative CHAT traits like high zero-padding ratio, symmetric low-throughput timing, and human-conversation-driven irregularity are absent."
+      },
+      {
+        "sample_id": 103,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate faithfulness, byte grounding, or completeness against the ground truth."
+      },
+      {
+        "sample_id": 104,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report uses vague, generic statements about video streaming without grounding claims in specific byte-level observations like ASCII ratio or entropy measurements, misses key discriminative traits (high ASCII ratio, low zero-padding ratio indicating sustained payload activity), and introduces fabricated details like 'Tor onion routing' and an impossible '102.3% of bytes' protocol breakdown."
+      },
+      {
+        "sample_id": 105,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report misattributes the traffic to Tor browsing rather than VIDEO, uses incorrect trait values (high zero-pad vs ground-truth mid, claims TLS record vs ground-truth false), and misses the key discriminative trait of sustained high-throughput unidirectional download that distinguishes VIDEO from other Tor categories."
+      },
+      {
+        "sample_id": 106,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted report incorrectly asserts TLS record headers and high ASCII ratio, both contradicting ground-truth traits (no TLS, low ASCII), and misses the key discriminative behavioral traits like bursty periodic sync intervals and short high-throughput bursts that distinguish MAIL from similar categories."
+      },
+      {
+        "sample_id": 107,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate faithfulness, grounding, or completeness."
+      },
+      {
+        "sample_id": 108,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted report contradicts ground-truth on every key trait (claims TLS present, high ASCII, mid entropy vs. no TLS, low ASCII, high entropy) and misses all discriminative Tor-browsing characteristics like asymmetric throughput and bursty patterns, making it largely inaccurate and generic."
+      },
+      {
+        "sample_id": 109,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence and description describe Tor BROWSING rather than VOIP, missing all key VOIP discriminators (codec-driven timing, bidirectional low-bandwidth, high ASCII/low entropy/high zero-padding traits), and the byte-level claims are entirely vague and misdirected."
+      },
+      {
+        "sample_id": 110,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence contradicts the ground truth (claims high entropy vs. actual low entropy, mentions audio/video streaming irrelevant to CHAT), misses the key discriminative traits of high ASCII ratio, low entropy, high zero-padding, and short flow characteristics, and relies on vague or wrong qualitative statements rather than concrete byte-level observations."
+      },
+      {
+        "sample_id": 111,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence and description describe Tor CHAT traffic characteristics rather than AUDIO, misidentifying the class entirely with wrong behavioral traits (bursty entropy, chat protocols, ASCII content) while missing AUDIO-specific discriminators like sustained moderate throughput, CDN routing via Tor relays, and buffering tolerance."
+      },
+      {
+        "sample_id": 112,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence is almost entirely generic (mixed entropy, TCP dominance) and the description fabricates irrelevant details (YouTube, Tor onion routing, video streaming) not supported by the ground-truth traits, while missing the key discriminative feature of high zero-padding ratio indicating a short flow."
+      },
+      {
+        "sample_id": 113,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted traits contradict the ground truth on key discriminative dimensions (high ASCII/low entropy vs. low ASCII/high entropy), undermining faithfulness; the evidence lacks byte-level specificity and misses critical FILE-TRANSFER distinguishing traits like sustained unidirectional throughput and high-entropy encrypted payload signatures."
+      },
+      {
+        "sample_id": 114,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report falsely asserts TLS record presence and high ASCII ratio (contradicting ground truth of no TLS and mid ASCII), and lacks the key discriminative trait of sustained unidirectional high-throughput download that distinguishes VIDEO from other categories."
+      },
+      {
+        "sample_id": 115,
+        "class": "MAIL",
+        "faithfulness": 3,
+        "byte_grounding": 3,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TCP dominance, high entropy, and low zero-padding but falsely asserts TLS record headers (has_tls_record is false in ground truth), and omits the key discriminative behavioral trait distinguishing MAIL from similar categories like Tor CHAT and FILE-TRANSFER (periodic sync intervals, bursty short transfers)."
+      },
+      {
+        "sample_id": 116,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence describes email/SMTP/POP3 traffic rather than P2P, contradicting the predicted class, with no byte-level grounding and missing key P2P discriminative traits like upload/download symmetry and sustained high throughput."
+      },
+      {
+        "sample_id": 117,
+        "class": "BROWSING",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted description contradicts the class (mentioning SFTP/SSH/Tor tunneling instead of BROWSING), key traits are inverted (predicts TLS record present vs absent, high ASCII vs mid, mid entropy vs high), and the description is incoherent for web browsing traffic."
+      },
+      {
+        "sample_id": 118,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes Tor CHAT tunneling with plaintext/ASCII characteristics, contradicting the MAIL class which has high entropy, low ASCII ratio, and distinct periodic sync behavior; none of the discriminative MAIL traits are covered."
+      },
+      {
+        "sample_id": 119,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly asserts a TLS record header (contradicting ground-truth has_tls_record=false), invents unsupported claims about Tor onion routing and SRTP, and misses the key discriminative traits of high ASCII ratio with low entropy and sustained unidirectional high-throughput download that distinguish VIDEO from other categories."
+      },
+      {
+        "sample_id": 120,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report is entirely empty—no traits, no evidence, no description—so it provides zero support for the AUDIO classification and covers none of the ground-truth discriminative features."
+      },
+      {
+        "sample_id": 121,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes FTP with ports 20/587/990 and contradicts the ground truth on every trait (invents TLS, misidentifies protocol as FTP, wrong entropy/ASCII characterization), making it entirely irrelevant to VIDEO traffic classification."
+      },
+      {
+        "sample_id": 122,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted traits and evidence directly contradict the ground truth on every key dimension—claiming high ASCII ratio and low entropy (TLS-encrypted) when the actual traffic has low ASCII ratio, high entropy, and TCP dominance, and the description incorrectly characterizes the traffic as chat/Tor relay rather than sustained unidirectional video download."
+      },
+      {
+        "sample_id": 123,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report contradicts itself (claims 45.6% UDP despite stating 100% TCP), omits the key discriminative traits of high ASCII ratio and low entropy, and provides no byte-level measurements, relying instead on vague qualitative descriptions."
+      },
+      {
+        "sample_id": 124,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly claims TLS record presence and high ASCII/low entropy while ground truth shows no TLS, mid ASCII, and mid entropy; the description also fabricates RTP/RTCP metrics and an HTTP method, missing the key VOIP discriminators like codec-driven regular timing and bidirectional low-bandwidth patterns."
+      },
+      {
+        "sample_id": 125,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no traits, evidence, or description whatsoever, making it impossible to assess faithfulness, byte grounding, or completeness against the ground truth."
+      },
+      {
+        "sample_id": 126,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted traits contradict ground truth (entropy_bucket high vs low, has_http_method true vs false, zero_pad_ratio low vs mid), the evidence relies on generic/incorrect claims like 'HTTP GET' and 'HTTP benchmarking' rather than VIDEO-specific sustained unidirectional download behavior, and the description's 'highest throughput in lower 128-byte window' is fabricated and irrelevant to VIDEO classification."
+      },
+      {
+        "sample_id": 127,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no traits, evidence, or description whatsoever, providing zero support for the VOIP classification and covering none of the ground-truth discriminative traits."
+      },
+      {
+        "sample_id": 128,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts ground-truth traits (claims TLS present and high entropy when ground truth shows no TLS and mid entropy), fabricates irrelevant application breakdowns (DNS tunneling, favicon fetching), and misses the key discriminative trait of sustained moderate throughput characteristic of Tor audio streaming."
+      },
+      {
+        "sample_id": 129,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report incorrectly attributes TLS encryption and mid ASCII ratio when ground truth shows no TLS and high ASCII ratio, misses the key P2P discriminators (upload/download symmetry, sustained high throughput, highest bandwidth utilization), and conflates P2P with file transfer protocols like FTP/SFTP over Tor with little concrete byte-level grounding."
+      },
+      {
+        "sample_id": 130,
+        "class": "VOIP",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence describes Tor MAIL characteristics (IMAP/POP3/SMTP, bursty transfers, email clients) rather than VOIP traits, missing the key discriminative features like high zero-padding (short flow), bidirectional low-bandwidth codec-driven regular packet intervals, and misidentifying the traffic class entirely in the description."
+      },
+      {
+        "sample_id": 131,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report misidentifies the traffic as 'multimedia streaming' rather than P2P, contains contradictory trait values (claims 'high ASCII ratio' and 'high entropy' but ground truth shows low/mid), and misses key P2P discriminators like upload/download symmetry and sustained bulk transfer patterns."
+      },
+      {
+        "sample_id": 132,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess any dimension positively."
+      },
+      {
+        "sample_id": 133,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence misidentifies key traits (low entropy vs. ground-truth mid, high ASCII ratio vs. ground-truth low, TCP vs. TLS protocol dominance) and omits the critical discriminative characteristics of VOIP such as bidirectional codec-driven regular timing and sustained payload activity, relying instead on generic TLS and entropy observations."
+      },
+      {
+        "sample_id": 134,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts ground-truth on key traits (TLS present vs. absent, high ASCII vs. low ASCII, mid entropy vs. high entropy), making the evidence both unfaithful and poorly grounded, while also missing the critical distinguishing behavioral characteristics of MAIL traffic such as periodic sync intervals and bursty transfer patterns."
+      },
+      {
+        "sample_id": 135,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 3,
+        "byte_grounding": 2,
+        "completeness": 3,
+        "rationale": "The report correctly identifies TLS encryption and high-throughput transfer but lacks specific byte-level evidence (e.g., content-type byte 0x14-0x17, version bytes), conflates SFTP/Skype/STUN/SSH without grounding, misses the zero_pad_ratio discrepancy (mid vs low), and omits discriminative traits like unidirectional dominance and sustained vs bursty throughput comparison."
+      },
+      {
+        "sample_id": 136,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly claims HTTP methods are present and high entropy while ground truth shows no HTTP methods, low ASCII ratio, and mid entropy, with several key discriminative traits (Tor relay characteristics, asymmetric throughput, bursty patterns) entirely missed."
+      },
+      {
+        "sample_id": 137,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte grounding, or completeness."
+      },
+      {
+        "sample_id": 138,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-grounding, or completeness."
+      },
+      {
+        "sample_id": 139,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes TLS encryption, high entropy, and Tor browsing characteristics, directly contradicting the ground truth which shows no TLS record, low entropy, high ASCII ratio, and high zero-padding — nearly every predicted trait is the opposite of the actual signal, and the description conflates VIDEO with Tor BROWSING."
+      },
+      {
+        "sample_id": 140,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-level grounding, or coverage of discriminative traits."
+      },
+      {
+        "sample_id": 141,
+        "class": "MAIL",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report misidentifies key traits (predicts high ASCII ratio and low zero-padding vs. ground-truth low ASCII and mid zero-padding), describes chat-over-Tor behavior instead of MAIL-specific periodic sync/bursty transfer patterns, and lacks concrete byte-level measurements to support its claims."
+      },
+      {
+        "sample_id": 142,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted evidence describes Tor/P2P browsing with HTTP methods and no TLS records, contradicting the MAIL class ground truth which shows TLS-encrypted mail traffic; the description is entirely wrong for MAIL and lacks any byte-level TLS record observations like content-type bytes or version fields."
+      },
+      {
+        "sample_id": 143,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess support for the AUDIO class."
+      },
+      {
+        "sample_id": 144,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate faithfulness, byte grounding, or completeness."
+      },
+      {
+        "sample_id": 145,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The report contradicts itself (claims 'low entropy' yet 'high entropy' in description) and misreports key traits (low vs high entropy, high vs mid ASCII ratio, mid vs low zero-pad ratio), while providing only partially specific byte-level evidence and missing the ground-truth's discriminative high-entropy and low-padding observations."
+      },
+      {
+        "sample_id": 146,
+        "class": "BROWSING",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte grounding, or completeness."
+      },
+      {
+        "sample_id": 147,
+        "class": "BROWSING",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts the ground truth on key measurable traits (high vs. low ASCII ratio, low vs. mid entropy, mid vs. low zero-pad ratio), the description incoherently mixes BROWSING with email/Tor hidden service claims, and it misses the critical discriminative traits like asymmetric bursty download patterns and absence of SNI/destination IP exposure that distinguish Tor browsing."
+      },
+      {
+        "sample_id": 148,
+        "class": "AUDIO",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, grounding, or completeness."
+      },
+      {
+        "sample_id": 149,
+        "class": "BROWSING",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to assess faithfulness, byte-grounding, or completeness."
+      },
+      {
+        "sample_id": 150,
+        "class": "VIDEO",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The report invents fictional Tor-over-I2P tunnel details unsupported by evidence, misidentifies the TLS record trait (predicted true vs ground-truth false), omits key discriminative traits like sustained unidirectional high-throughput download and mid zero-pad ratio, and provides no concrete byte-level measurements beyond vague entropy references."
+      },
+      {
+        "sample_id": 151,
+        "class": "VIDEO",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence describes Tor chat with high entropy and high ASCII ratio, directly contradicting the ground-truth traits of low entropy and high ASCII ratio for VIDEO traffic, and misidentifies discriminative features entirely."
+      },
+      {
+        "sample_id": 152,
+        "class": "BROWSING",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no evidence, traits, or description whatsoever, making it impossible to evaluate faithfulness, byte-level grounding, or completeness."
+      },
+      {
+        "sample_id": 153,
+        "class": "CHAT",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence contradicts key ground-truth traits (claims low zero-padding and TLS records, but ground truth shows high zero-padding and no TLS), and misses the critical discriminative features of short flows, high zero-padding, and low entropy that distinguish CHAT traffic."
+      },
+      {
+        "sample_id": 154,
+        "class": "MAIL",
+        "faithfulness": 1,
+        "byte_grounding": 1,
+        "completeness": 1,
+        "rationale": "The predicted report contains no traits, evidence, or description whatsoever, making it impossible to assess faithfulness, byte-grounding, or completeness."
+      },
+      {
+        "sample_id": 155,
+        "class": "P2P",
+        "faithfulness": 1,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted evidence contradicts the ground truth on nearly every trait (claims TLS record present and high ASCII ratio, but ground truth shows no TLS record, mid ASCII, and high entropy), and the description references HTTPS/Tor browsing rather than P2P-specific traits like upload/download symmetry and sustained bulk transfer, making it both unfaithful and incomplete."
+      },
+      {
+        "sample_id": 156,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 1,
+        "rationale": "The predicted report incorrectly asserts TLS record headers and high ASCII ratio, contradicting ground-truth traits of no TLS, low ASCII ratio, and high zero-padding; it misses the key discriminative traits of short flow with high zero-padding and codec-driven regular timing, and introduces fabricated claims about HTTP methods and Tor exit nodes."
+      },
+      {
+        "sample_id": 157,
+        "class": "P2P",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted evidence incorrectly asserts TLS record headers (ground truth has_tls_record=false), mischaracterizes entropy as high (ground truth is mid), and fails to mention the key discriminative P2P trait of upload/download symmetry and sustained throughput, instead describing unidirectional bulk file transfer more consistent with FILE-TRANSFER class."
+      },
+      {
+        "sample_id": 158,
+        "class": "VOIP",
+        "faithfulness": 2,
+        "byte_grounding": 1,
+        "completeness": 2,
+        "rationale": "The predicted report misidentifies key traits (no TLS record, has HTTP method, mid ASCII ratio vs. ground-truth TLS present, no HTTP, low ASCII), describes chat/Tor traffic instead of VOIP, includes an impossible '102.3% of bytes' claim, and lacks any concrete byte-level evidence such as TLS content-type bytes or version fields."
+      },
+      {
+        "sample_id": 159,
+        "class": "FILE-TRANSFER",
+        "faithfulness": 2,
+        "byte_grounding": 2,
+        "completeness": 2,
+        "rationale": "The predicted report contradicts ground truth on zero-padding (claims 'high' when ground truth is 'low'), omits the key high ASCII ratio discriminator, and lacks any mention of unidirectional single-server connection patterns, while relying on vague throughput descriptions rather than concrete byte-level measurements."
+      }
+    ],
+    "failed_ids": []
+  }
+}
