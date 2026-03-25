@@ -46,12 +46,12 @@ Evaluated on **6 benchmark datasets** covering VPN, Tor, TLS, malware, and cross
 
 | Dataset | Traffic Type | Download |
 |---|---|---|
-| ISCXVPN2016 | VPN encrypted traffic | [🔗 Coming soon](#) |
-| ISCX-Tor-2016 | Tor anonymous traffic | [🔗 Coming soon](#) |
-| CSTNET-TLS1.3 | TLS 1.3 encrypted traffic | [🔗 Coming soon](#) |
-| USTC-TFC-2016 | Malicious & normal traffic | [🔗 Coming soon](#) |
-| CrossPlatform (Android) | Cross-platform app traffic | [🔗 Coming soon](#) |
-| CrossPlatform (iOS) | Cross-platform app traffic | [🔗 Coming soon](#) |
+| ISCXVPN2016 | VPN encrypted traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| ISCX-Tor-2016 | Tor anonymous traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CSTNET-TLS1.3 | TLS 1.3 encrypted traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| USTC-TFC-2016 | Malicious & normal traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CrossPlatform (Android) | Cross-platform app traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
+| CrossPlatform (iOS) | Cross-platform app traffic | [📥 Download Datasets (BaiduNetdisk, code: v5u6)](https://pan.baidu.com/s/1HtpaPqpajgFg_zykGp8f8w?pwd=v5u6) |
 
 > 📥 All datasets will be provided via **BaiduNetdisk / Google Drive**
 
