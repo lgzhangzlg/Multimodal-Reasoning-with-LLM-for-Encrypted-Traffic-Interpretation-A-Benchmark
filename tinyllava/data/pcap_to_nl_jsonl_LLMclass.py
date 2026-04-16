@@ -313,7 +313,7 @@ def analyze_pcap_stats(pcap_path: str, topk: int = 5) -> Dict[str, Any]:
         packets = rdpcap(pcap_path)
     except Exception:
         return _empty_stats()
-    if not packets:
+    if not packets: 
         return _empty_stats()
 
     protocol_counts: Dict[str, int] = {}

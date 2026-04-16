@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔐 DTLR
+# 🔐 mmTraffic
 
 **Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark**
 
@@ -20,23 +20,26 @@
 
 ## 📖 Overview
 
-DTLR proposes a **"Perception-before-Cognition"** architecture that decouples encrypted traffic understanding into two sequential stages:
+mmTraffic proposes a **jointly-optimized perception-cognition architecture** for encrypted traffic interpretation, consisting of three tightly coupled modules:
 
-- **Perception**: A frozen NetMamba encoder extracts deep representations from raw traffic byte sequences.
-- **Cognition**: A Qwen3-1.7B LLM with LoRA fine-tuning performs traffic classification and generates structured forensic reports including behavioral traits, evidence chains, and risk assessments.
+- **Perception**: An **unfrozen** NetMamba encoder actively participates in end-to-end training, learning language-aligned representations directly from raw traffic bytes.
+- **Alignment**: A lightweight MLP connector bridges the traffic latent space and the LLM lexical space, with an **Auxiliary Classification Head** (Aκ) enforcing discriminative categorical boundaries via a dedicated cross-entropy loss.
+- **Cognition**: A Qwen3-1.7B LLM with LoRA generates structured forensic reports guided by a **Semantic-Priority Guided Generation Loss**, which dynamically amplifies the optimization weight on categorical prefix tokens to eliminate hallucinations.
 
 <div align="center">
-  <img src="llavav_model.png" alt="DTLR Architecture" width="100%"/>
-  <p><em>Figure 1: Overall architecture of the DTLR framework.</em></p>
+  <img src="llavav7.png" alt="mmTraffic Architecture" width="100%"/>
+  <p><em>Figure 1: Overview of the mmTraffic framework. (a) The unfrozen traffic encoder Tθ extracts and actively updates features from raw traffic data. (b) The connector Cω projects traffic features into the LLM token space, with the Auxiliary Classification Head enforcing discriminative constraints. (c) The LLM Gϕ autoregressively generates a structured forensic report under semantic-priority guided generation loss.</em></p>
 </div>
 
 | Component | Details |
 |---|---|
 | 🧠 LLM Backbone | Qwen3-1.7B |
-| 👁️ Traffic Encoder | NetMamba (frozen) |
-| 🔗 Connector | MLP 2× GeLU |
-| 🎛️ Fine-tuning | LoRA (r=16, α=16) |
-| ⚡ Training Strategy | DeepSpeed ZeRO-2, 4× GPU |
+| 👁️ Traffic Encoder | NetMamba (**unfrozen**, end-to-end) |
+| 🔗 Connector | MLP 2× GeLU (fully fine-tuned) |
+| 🎛️ Fine-tuning | LoRA (r=32, α=64) |
+| 🏷️ Auxiliary Head | Cross-entropy classification constraint (λ=0.3) |
+| 📊 Generation Loss | Semantic-Priority Guided (γ=5.0, M=15) |
+| ⚡ Training Strategy | DeepSpeed ZeRO-2, 5× A800 GPU |
 
 ---
 
@@ -52,7 +55,7 @@ To bridge this gap, this paper proposes the **Byte-Grounded Traffic Description 
 
 <div align="center">
   <img src="Dataset_generate.png" alt="BGTD Dataset Construction Pipeline" width="100%"/>
-  <p><em>Figure 2: Pipeline of developing BGTD dataset: (a) session extraction and class balancing from raw PCAP files, (b) fixed-length 10×160 NPY array generation via priority-based packet sampling, and (c) LLM-assisted ground-truth synthesis using Claude Opus prompted as a senior network security expert.</em></p>
+  <p><em>Figure 2: Pipeline of developing BGTD dataset: (a) session extraction and class balancing from raw PCAP files, (b) fixed-length 10×160 NPY array generation via priority-based packet sampling, and (c) LLM-assisted ground-truth synthesis using Claude Opus-4.6 prompted as a senior network security expert.</em></p>
 </div>
 
 **Key design choices:**
@@ -96,12 +99,12 @@ BGTD integrates **6 authoritative public traffic repositories**, covering divers
 ## 🛠️ Environment Setup
 
 ```bash
-conda create -n dtlr python=3.10
-conda activate dtlr
+conda create -n mmtraffic python=3.10
+conda activate mmtraffic
 pip install -r requirements.txt
 ```
 
-> ⚠️ **Requirements**: CUDA-capable GPU(s). Training uses **4× GPU** with DeepSpeed ZeRO-2. Inference uses **2× GPU**.
+> ⚠️ **Requirements**: CUDA-capable GPU(s). Training uses **5× A800 GPU** with DeepSpeed ZeRO-2. Inference uses **2× GPU**.
 
 ---
 
@@ -126,19 +129,19 @@ deepspeed --num_gpus 4 \
   --bf16 True \
   --training_recipe lora \
   --tune_type_llm lora \
-  --tune_type_vision_tower frozen \
+  --tune_type_vision_tower full \
   --tune_type_connector full \
-  --lora_r 16 \
-  --lora_alpha 16 \
+  --lora_r 32 \
+  --lora_alpha 64 \
   --lora_dropout 0.1 \
   --lora_bias none \
-  --per_device_train_batch_size 4 \
-  --gradient_accumulation_steps 16 \
-  --learning_rate 2e-5 \
+  --per_device_train_batch_size 3 \
+  --gradient_accumulation_steps 8 \
+  --learning_rate 5e-5 \
   --warmup_ratio 0.1 \
   --weight_decay 0.01 \
   --max_grad_norm 1.0 \
-  --num_train_epochs 3 \
+  --num_train_epochs 10 \
   --logging_steps 10 \
   --save_steps 300 \
   --output_dir /path/to/output \
@@ -175,7 +178,7 @@ Experimental results across all six datasets are reported in the paper.
 ## 📁 Repository Structure
 
 ```
-DTLR/
+mmTraffic/
 ├── DTLR_model/
 │   └── tinyllava/
 │       ├── train/          # Training scripts
@@ -183,7 +186,7 @@ DTLR/
 │       └── utils/          # Utility functions
 ├── scripts/
 │   └── zero2.json          # DeepSpeed ZeRO-2 config
-├── llavav_model.png        # Architecture figure
+├── llavav7.png             # mmTraffic architecture figure
 ├── Dataset_generate.png    # BGTD dataset pipeline figure
 ├── requirements.txt
 └── README.md
@@ -196,7 +199,7 @@ DTLR/
 If you find this work useful for your research, please consider citing:
 
 ```bibtex
-@article{dtlr2025,
+@article{mmtraffic2025,
   title   = {Multimodal Reasoning with LLM for Encrypted Traffic Interpretation: A Benchmark},
   author  = {Longgang Zhang, Xiaowei Fu, Fuxiang Huang, and Lei Zhang},
   journal = {},

@@ -4,6 +4,7 @@ import ast
 
 import torch
 import torch.utils.checkpoint
+import torch.nn.functional as F
 from torch import nn
 
 from transformers import PreTrainedModel
@@ -73,6 +74,29 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         ))
         self.post_init()
 
+        # ── 分类头相关属性（训练前通过 init_cls_head 初始化）──
+        self.cls_head = None
+        self.num_traffic_classes = 0
+        self.lambda_cls = 0.3      # todo
+        self._cls_logits_cache = None   # forward 中暂存，用于计算 cls_loss
+
+    def init_cls_head(self, num_classes: int, lambda_cls: float = 0.1):
+        """
+        在训练脚本中、数据加载后调用，动态初始化 H_align 分类头。
+        分类头结构：H_align global avg pool -> Linear -> num_classes
+        """
+        hidden_size = self.config.text_config.hidden_size  # 2048 for Qwen3-1.7B
+        self.num_traffic_classes = num_classes
+        self.lambda_cls = lambda_cls
+        self.cls_head = nn.Linear(hidden_size, num_classes)
+        # 初始化权重
+        nn.init.xavier_uniform_(self.cls_head.weight)
+        nn.init.zeros_(self.cls_head.bias)
+        # 移到模型所在设备和精度
+        self.cls_head = self.cls_head.to(device=self.device, dtype=self.dtype)
+        print(f"  [CLS_HEAD] Initialized: hidden_size={hidden_size}, "
+              f"num_classes={num_classes}, lambda_cls={lambda_cls}")
+
     def get_input_embeddings(self):
         return self.language_model.get_input_embeddings()
 
@@ -117,6 +141,7 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
             images: Optional[torch.FloatTensor] = None,
             image_sizes: Optional[List[List[int]]] = None,
             return_dict: Optional[bool] = None,
+            class_labels: Optional[torch.LongTensor] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         use_cache = use_cache if use_cache is not None else self.config.use_cache
         if inputs_embeds is None:
@@ -136,7 +161,8 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
                 images,
                 image_sizes,
             )
-        return self.language_model.forward(
+
+        output = self.language_model.forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -148,6 +174,63 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
+
+        # 🚀 措施 C：对 JSON 输出前 20 个 Token（即类别字段）施加动态加权 Loss
+        if self.training and labels is not None and output.logits is not None:
+            shift_logits = output.logits[..., :-1, :].contiguous()
+            shift_labels = labels[..., 1:].contiguous()
+            # Hugging Face 默认的 ignore_index 是 -100
+            valid_mask = shift_labels != -100
+
+            extra_loss = 0.0
+            boost_weight = 5.0  # 额外增加 5 倍 Loss (加上原本的 1 倍，共 6 倍权重)  # todo
+            M = 15  # 锁定助手回答的前 15 个 Token (完美覆盖 {"class": "类别名"...)
+
+            loss_fct = nn.CrossEntropyLoss(reduction='sum', ignore_index=-100)
+
+            for b in range(shift_labels.size(0)):
+                # 找出这个 batch 中，有效 Token（即助手生成的文本）的起始位置
+                valid_indices = valid_mask[b].nonzero(as_tuple=True)[0]
+                if len(valid_indices) > 0:
+                    start_idx = valid_indices[0]
+                    # 只取前 M 个 Token，如果总长度不足 M，就取到最后
+                    end_idx = min(start_idx + M, valid_indices[-1] + 1)
+
+                    target_logits = shift_logits[b, start_idx:end_idx]
+                    target_labels = shift_labels[b, start_idx:end_idx]
+
+                    # 累加这几个特定 Token 的 Loss
+                    extra_loss += loss_fct(target_logits, target_labels)
+
+            # 将额外的 Loss 分摊到整个 Batch 的有效 Token 数量上，保持与原 Loss 尺度一致
+            total_valid_tokens = valid_mask.sum()
+            if total_valid_tokens > 0:
+                extra_loss = (extra_loss * boost_weight) / total_valid_tokens
+                output.loss += extra_loss
+
+        # 🚀 措施 A：添加 H_align 的辅助分类 Loss + 精度监控
+        if (self.training
+                and self.cls_head is not None
+                and self._cls_logits_cache is not None
+                and class_labels is not None):
+            cls_logits = self._cls_logits_cache
+            loss_cls = F.cross_entropy(cls_logits, class_labels)
+
+            if output.loss is not None:
+                output.loss = output.loss + self.lambda_cls * loss_cls
+
+            # 计算 cls_head 精度并缓存，供 Callback 读取
+            with torch.no_grad():
+                preds = cls_logits.argmax(dim=-1)
+                correct = (preds == class_labels).sum().item()
+                total = class_labels.size(0)
+                self._cls_acc_correct = getattr(self, '_cls_acc_correct', 0) + correct
+                self._cls_acc_total = getattr(self, '_cls_acc_total', 0) + total
+                self._cls_loss_cache = loss_cls.item()
+
+            self._cls_logits_cache = None
+
+        return output
 
     @torch.no_grad()
     def generate(
@@ -191,8 +274,7 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
 
     def encode_images(self, images):
         """
-        只提取流量特征，不再生成 hint embedding。
-        类别信息通过 <cls_placeholder> 替换机制在线注入。
+        提取流量特征 + H_align 分类 logits。
         """
         kwargs = {}
         kwargs['vision_feature_layer'] = self.config.vision_feature_layer
@@ -203,10 +285,17 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         # vision_tower 返回 (features, logits)
         image_features_raw, logits = self.vision_tower(images, **kwargs)
 
-        # 原始特征 -> Connector -> LLM 维度
+        # 原始特征 -> Connector -> LLM 维度 (H_align)
         image_features = self.connector(image_features_raw)
 
-        # 只返回特征和 logits，不再生成 hint embedding
+        # H_align 分类头：计算并缓存 cls_logits
+        if self.cls_head is not None:
+            # image_features: (B, L, D) -> global avg pool -> (B, D) -> cls_logits
+            pooled = image_features.mean(dim=1)   # (B, D)
+            self._cls_logits_cache = self.cls_head(pooled)  # (B, num_classes)
+        else:
+            self._cls_logits_cache = None
+
         return image_features, logits
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None,
@@ -412,3 +501,4 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
 
     def load_connector(self, **kwargs):
         self.connector.load_model(**kwargs)
+

@@ -85,9 +85,9 @@ class LoRATrainingRecipe(BaseTrainingRecipe):
 
     def save(self, model, trainer):
         """
-        保存策略：
+        保存策略（修改后支持 cls_head）：
         1) tokenizer + config
-        2) base 参数（language_model / vision_tower / connector）——非 LoRA
+        2) base 参数（language_model / vision_tower / connector / cls_head）——非 LoRA
         3) LoRA 参数：model.save_pretrained(...)
         """
         model.config.use_cache = True
@@ -133,6 +133,18 @@ class LoRATrainingRecipe(BaseTrainingRecipe):
             connector_output_dir = os.path.join(self.training_arguments.output_dir, "connector")
             os.makedirs(connector_output_dir, exist_ok=True)
             torch.save(connector_state_dict, os.path.join(connector_output_dir, "pytorch_model.bin"))
+
+            # --- cls_head ---
+            if hasattr(base, 'cls_head') and base.cls_head is not None:
+                cls_head_output_dir = os.path.join(self.training_arguments.output_dir, "cls_head")
+                os.makedirs(cls_head_output_dir, exist_ok=True)
+                torch.save(base.cls_head.state_dict(), os.path.join(cls_head_output_dir, "pytorch_model.bin"))
+                # 保存 class_list（idx → class name 映射，评估时需要）
+                if hasattr(base, 'class_list') and base.class_list is not None:
+                    import json as _json
+                    with open(os.path.join(cls_head_output_dir, "class_list.json"), "w") as f:
+                        _json.dump(base.class_list, f, ensure_ascii=False)
+                print(f"[CLS_HEAD] Saved cls_head weights to {cls_head_output_dir}")
 
         # save lora params
         lora_state_dict = get_peft_state_maybe_zero_3(

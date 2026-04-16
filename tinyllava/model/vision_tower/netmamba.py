@@ -342,8 +342,11 @@ class NetmambaVisionTower(VisionTower):
     def _load_model(self, vision_tower_name, **kwargs):
         pretrained_vision_tower_path = kwargs.pop(
             'pretrained_vision_tower_path',
-            "/root/autodl-tmp/Tiny_LLaVA/third_model/NetMamba/finetune_train_out/USTC-TFC-2016/USTC-TFC-2016_npy_v3_balacned_3000_6000_train_test_splited_epochs60/checkpoint-best.pth"
+            "/root/autodl-tmp/Tiny_LLaVA/third_model/NetMamba/finetune_train_out/CrossPlatform_android/CrossPlatform_android_npy_balacned_50_2000_class_loss_epochs_120/checkpoint-best.pth"
         )
+        # pretrained_vision_tower_path = kwargs.pop('pretrained_vision_tower_path', None)
+        # if pretrained_vision_tower_path is None:
+        #     print("[WARNING] pretrained_vision_tower_path not provided, using randomly initialized NetMamba")
 
         if pretrained_vision_tower_path is None:
             raise ValueError("pretrained_vision_tower_path is None.")
