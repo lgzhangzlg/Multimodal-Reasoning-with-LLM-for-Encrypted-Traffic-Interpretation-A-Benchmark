@@ -179,16 +179,19 @@ Experimental results across all six datasets are reported in the paper.
 
 ```
 mmTraffic/
-├── DTLR_model/
-│   └── tinyllava/
-│       ├── train/          # Training scripts
-│       ├── eval/           # Evaluation scripts
-│       └── utils/          # Utility functions
+├── mmTraffic_model/
+│   ├── data/               # Dataset preprocessing & JSONL generation
+│   ├── eval/               # Evaluation scripts
+│   ├── model/              # Model architecture (connector, LLM, vision tower)
+│   ├── train/              # Training entry & trainer
+│   └── utils/              # Utility functions
 ├── scripts/
-│   └── zero2.json          # DeepSpeed ZeRO-2 config
+│   ├── zero2.json          # DeepSpeed ZeRO-2 config
+│   ├── train/              # Training shell scripts
+│   └── eval/               # Evaluation shell scripts
 ├── llavav7.png             # mmTraffic architecture figure
 ├── Dataset_generate.png    # BGTD dataset pipeline figure
-├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
